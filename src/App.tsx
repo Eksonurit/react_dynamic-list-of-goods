@@ -9,16 +9,38 @@ import { Good } from './types/Good';
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
-  const handleAllGoods = () => {
-    getAll().then(res => setGoods(res));
+  const [error, setError] = useState<string | null>(null);
+  const handleAllGoods = async () => {
+    try {
+      setError(null);
+      const res = await getAll();
+
+      setGoods(res);
+    } catch (e) {
+      setError('Не вдалося завантажити товари. Спробуйте пізніше.');
+    }
   };
 
-  const handleFirstFive = () => {
-    get5First().then(res => setGoods(res));
+  const handleFirstFive = async () => {
+    try {
+      setError(null);
+      const res = await get5First();
+
+      setGoods(res);
+    } catch (e) {
+      setError('Не вдалося завантажити товари. Спробуйте пізніше.');
+    }
   };
 
-  const handleRed = () => {
-    getRedGoods().then(res => setGoods(res));
+  const handleRed = async () => {
+    try {
+      setError(null);
+      const res = await getRedGoods();
+
+      setGoods(res);
+    } catch (e) {
+      setError('Не вдалося завантажити товари. Спробуйте пізніше.');
+    }
   };
 
   return (
@@ -40,6 +62,12 @@ export const App: React.FC = () => {
       <button type="button" data-cy="red-button" onClick={handleRed}>
         Load red goods
       </button>
+
+      {error && (
+        <div className="error" style={{ color: 'red', marginTop: '10px' }}>
+          {error}
+        </div>
+      )}
 
       <GoodsList goods={goods} />
     </div>
